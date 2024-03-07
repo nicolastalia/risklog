@@ -1,0 +1,58 @@
+model "The Layout Problem"
+  uses "mmsystem"
+
+
+! ============================================================================
+! Reading problem parameters
+! ============================================================================
+filename := "Data_Xpress.txt"; 
+
+declarations
+  ! The number of product groups
+  nbProductGroups: integer
+  ! The maximal number of product groups per order
+  nbOrderSize: integer
+  ! The number of shelf spaces
+  nbShelves: integer
+  ! The number of orders
+  nbOrders: integer
+end-declarations
+
+! Reading the data
+initializations from filename
+  nbProductGroups nbOrderSize nbOrders nbShelves
+end-initializations
+
+declarations
+  ! The set of product groups
+  ProductGroups = 1..nbProductGroups
+  ! The set of orders
+  Orders = 1..nbOrders
+  ! The set of shelves
+  Shelves = 1..nbShelves
+  
+  ! The matrix of orders
+  OrderMatrix: array(Orders,1..nbOrderSize) of integer
+
+  ! The distance matrix between pairs of shelves
+  DistanceShelves: array(Shelves,Shelves) of integer
+  ! The distance vector between the packaging area and each shelf
+  DistancePackaging: array(Shelves) of integer
+
+  ! Gives for each shelf the assigned product group
+  ShelfAllocation: array(Shelves) of integer
+end-declarations
+
+! Reading the data
+initializations from filename
+  OrderMatrix as "Orders"
+  ShelfAllocation as "Allocations"
+  DistanceShelves as "DistanceShelfShelf"
+  DistancePackaging as "DistancePackagingShelf"
+end-initializations
+
+
+
+
+
+end-model
