@@ -3,7 +3,7 @@ import xpress as xp
 import pandas as pd
 import time
 
-def shortest_path(order):
+def shortest_path(order, distances_data):
     '''
     A function which takes as input an order which is a list of item numbers. 
     
@@ -32,14 +32,11 @@ def shortest_path(order):
     # Insert "Packaging into the order list so we can obtain the desired columns 
     order.insert(0,"Packaging")
     
-    # Import data file of distances
-    distances_data = pd.read_excel('DistanceMatrix.xlsx', sheet_name = "DistanceMatrix Meters")
-
     # Drop the first column of indices
     d_dat = distances_data.drop(columns = "Index")
     
-    # Select desired rows and columns
-    d_data = distances_data.loc[distances_data["Index"].isin(order)] # Filter rows
+    # Select desired rows and columns
+    d_data = distances_data.loc[distances_data["Index"].isin(order)] # Filter rows
     d_data = d_data[order] # Filter columns
 
     # Rename the packaging column to 0
@@ -47,7 +44,7 @@ def shortest_path(order):
 
     # Select and drop the final row
     first_r = d_data.loc[d_data["0"] == 0]
-    d_data = d_data.drop(index = [96])
+    d_data = d_data.drop([96])
 
     # Concat the dataframes so final row is first row
     d = pd.concat([first_r, d_data])
@@ -90,7 +87,7 @@ def shortest_path(order):
         xp.Sum(x[i, j] for j in I_ind) == 1 for i in I_ind
     )
 
-    # have to go to a different node
+    # have to go to a different node
     prob.addConstraint(
         x[i, i] == 0 for i in I_ind
     )
@@ -154,7 +151,7 @@ def shortest_path(order):
     
     return total_distance, sequence
 
-def distance(orders):
+def distance(orders, distances_data):
     '''
     A function which takes as input a data frame of orders. 
     
@@ -172,7 +169,7 @@ def distance(orders):
         order = orders.iloc[i].values.tolist()
         
         # Run the shortest path function and obtain the distance required for given order
-        total_distance, sequence = shortest_path(order)
+        total_distance, sequence = shortest_path(order, distances_data)
         
         # Add this distance to the running total
         tot_distance += total_distance

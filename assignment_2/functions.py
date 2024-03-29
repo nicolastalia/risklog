@@ -5,7 +5,7 @@ import seaborn as sns
 from collections import Counter
 import numpy as np
 
-def allocator(orders,distance):
+def allocator(orders,distance_df):
     total_items = []
     for order_list in orders.values:
         for item in order_list:
@@ -18,7 +18,7 @@ def allocator(orders,distance):
     bin_df = pd.DataFrame.from_dict(sorted_count, orient='index').reset_index()
     bin_df.columns = ['Product','Occurance']
 
-    new_allocation = distance_df.merge(bin_df,left_index=True, right_index=True)[['Shelve','Product']]
+    new_allocation = distance_df.merge(bin_df,left_index=True, right_index=True)#[['Shelve','Product']]
 
     return new_allocation
 
